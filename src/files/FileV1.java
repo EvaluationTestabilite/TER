@@ -26,6 +26,7 @@ public class FileV1 extends AbstractFile {
 	private ArrayList<ClassTree> innerClasses;
 	private ArrayList<MethodTree> setters;
 	private ArrayList<MethodTree> getters;
+	private java.io.File file;
 	
 	/**
 	 * Unique constructeur de cette classe. Permet d'analyser une fichier Java.
@@ -33,6 +34,7 @@ public class FileV1 extends AbstractFile {
 	 */
 	public FileV1(java.io.File file) {
 		if(file != null) {
+			this.file = file;
 			parameters = new ArrayList<VariableTree>();
 			returnMethods = new ArrayList<MethodTree>();
 			innerClasses = new ArrayList<ClassTree>();
@@ -44,6 +46,10 @@ public class FileV1 extends AbstractFile {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public java.io.File getFile() {
+		return file;
 	}
 	
 	public String getName() {
