@@ -33,16 +33,16 @@ public class FileV1 extends AbstractFile {
 	 */
 	public FileV1(java.io.File file) {
 		if(file != null) {
-			try {
-				JavaParser.parse(file).accept(visitor, this);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 			parameters = new ArrayList<VariableTree>();
 			returnMethods = new ArrayList<MethodTree>();
 			innerClasses = new ArrayList<ClassTree>();
 			setters = new ArrayList<MethodTree>();
 			getters = new ArrayList<MethodTree>();
+			try {
+				JavaParser.parse(file).accept(visitor, this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
