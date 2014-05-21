@@ -72,38 +72,35 @@ public class FileV1 extends AbstractFile {
 	@Override
 	public void treat(Tree tree) {
 		if(tree !=null) {
-			switch(tree.getClass().getSimpleName().toString().substring(2))
-			{
-			case "MethodDecl" :
-				MethodTree methodTree = (MethodTree) tree;
-				if(methodTree.getReturnType() != null) {
-					if(!methodTree.getReturnType().toString().equals("void")) {
-						returnMethods.add(methodTree);
+			if(MethodTree.class.isInstance(tree)) {
+				MethodTree node = (MethodTree) tree;
+				if(node.getReturnType() != null) {
+					if(!node.getReturnType().toString().equals("void")) {
+						returnMethods.add(node);
 					}
 				}
 				for(int i = 0; i < parameters.size(); ++i) {
-					if(("set"+parameters.get(i).getName().toString()).compareToIgnoreCase(methodTree.getName().toString()) == 0) {
-						setters.add(methodTree);
+					if(("set"+parameters.get(i).getName().toString()).compareToIgnoreCase(node.getName().toString()) == 0) {
+						setters.add(node);
 					}
-					else if(("get"+parameters.get(i).getName().toString()).compareToIgnoreCase(methodTree.getName().toString()) == 0) {
-						getters.add(methodTree);
+					else if(("get"+parameters.get(i).getName().toString()).compareToIgnoreCase(node.getName().toString()) == 0) {
+						getters.add(node);
 					}
 				}
-				break;
-			case "ClassDecl" :
-				ClassTree classTree = (ClassTree) tree;
+			}
+			else if(ClassTree.class.isInstance(tree)) {
+				ClassTree node = (ClassTree) tree;
 				if(mainClass == null) {
-					mainClass = classTree;
+					mainClass = node;
 					for(int i = 0; i < mainClass.getMembers().size(); ++i) {
-						if(mainClass.getMembers().get(i).getClass().getSimpleName().substring(2).equals("VariableDecl")) {
+						if(VariableTree.class.isInstance(mainClass.getMembers().get(i))) {
 							parameters.add((VariableTree) mainClass.getMembers().get(i));
 						}
 					}
 				}
 				else {
-					innerClasses.add(classTree);
+					innerClasses.add(node);
 				}
-				break;
 			}
 		}
 	}
