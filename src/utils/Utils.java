@@ -5,9 +5,10 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 
 public class Utils {
+	
 	/**
 	 * Permet de mettre la totalite d'un File dans un String
-	 * @param file le file en question (il doit être valide)
+	 * @param file le fichier en question (il doit être valide)
 	 * @return La chaine de caractère complète.
 	 */
 	public static String fileToString(File file) {

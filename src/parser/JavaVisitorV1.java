@@ -55,6 +55,14 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 
+/**
+ * Premiere version du visitor qui va parcourir l'ensemble des noeuds d'un ast créé par le parser de sun à partir du noeud où elle est appelé.
+ * </br>Il est interessant de noter que toutes les feuilles qui n'ont pas methodes accept sont notes ici en commentaire, on y retrouve en majeur partie les noms des elements.
+ * @author Rexxar
+ *
+ * @param <R> Le type de retour des methodes.
+ * @param <D> Le type de parametre des methodes.
+ */
 public class JavaVisitorV1<R, D> implements TreeVisitor<R, D> {
 
 	@Override

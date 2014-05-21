@@ -10,22 +10,39 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
-public class File extends AbstractFile {
-	private static final JavaVisitor<Object, File> visitor = new JavaVisitor<Object, File>();
-	private ArrayList<MethodTree> returnMethods = new ArrayList<MethodTree>();
-	private ClassTree mainClass;
-	private ArrayList<ClassTree> innerClasses = new ArrayList<ClassTree>();
-	private ArrayList<VariableTree> parameters = new ArrayList<VariableTree>();
-	private ArrayList<MethodTree> setters = new ArrayList<MethodTree>();
-	private ArrayList<MethodTree> getters = new ArrayList<MethodTree>();
+/**
+ * Premier exemple de classe ayant pour pere AbstractFile.</br>
+ * Cette classe utilise le parser Java de sun puis visite l'ast avec le JavaVisitor et analyse les infos dans sa methode treat.
+ * @author Rexxar
+ *
+ */
+public class FileV1 extends AbstractFile {
+	private static final JavaVisitor<Object, FileV1> visitor = new JavaVisitor<Object, FileV1>();
+
+	private ArrayList<VariableTree> parameters;
 	
-	public File(java.io.File file) {
+	private ArrayList<MethodTree> returnMethods;
+	private ClassTree mainClass;
+	private ArrayList<ClassTree> innerClasses;
+	private ArrayList<MethodTree> setters;
+	private ArrayList<MethodTree> getters;
+	
+	/**
+	 * Unique constructeur de cette classe. Permet d'analyser une fichier Java.
+	 * @param file Le fichier Java en question. Si file est null, il ne se passe rien. Si file n'est pas un fichier Java correct, il y aura des erreurs.
+	 */
+	public FileV1(java.io.File file) {
 		if(file != null) {
 			try {
-				JavaParser.parse(file, null).iterator().next().accept(visitor, this);
+				JavaParser.parse(file).accept(visitor, this);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			parameters = new ArrayList<VariableTree>();
+			returnMethods = new ArrayList<MethodTree>();
+			innerClasses = new ArrayList<ClassTree>();
+			setters = new ArrayList<MethodTree>();
+			getters = new ArrayList<MethodTree>();
 		}
 	}
 	

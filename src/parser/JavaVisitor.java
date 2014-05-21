@@ -57,6 +57,14 @@ import com.sun.source.tree.WildcardTree;
 
 import files.AbstractFile;
 
+/**
+ * Cette classe est un visitor qui va parcourir l'ensemble des noeuds d'un ast créé par le parser de sun à partir du noeud où elle est appelé.
+ * </br>Il est interessant de noter que toutes les feuilles qui n'ont pas methodes accept sont notes ici en commentaire, on y retrouve en majeur partie les noms des elements.
+ * @author Rexxar
+ *
+ * @param <R> Le type de retour des methodes.
+ * @param <D> Le type de parametre des methodes, il doit etendre AbstractFile. A chaque passage dans un noeuds "tree", la methode treat(tree) sera appelee.
+ */
 public class JavaVisitor<R, D extends AbstractFile> implements TreeVisitor<R, D> {
 
 	@Override

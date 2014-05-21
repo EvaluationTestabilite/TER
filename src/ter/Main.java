@@ -2,19 +2,23 @@ package ter;
 
 import java.util.ArrayList;
 
-import files.File;
+import files.FileV1;
 import utils.Utils;
 
 public class Main {
 	
+	/**
+	 * Exemple de programme qui affiche a l'ecran les caractéristiques qui nous interessent.
+	 * @param args Non utilisés.
+	 */
 	public static void main(String [] args) {
 		ArrayList<java.io.File> javaIOFiles = Utils.readWorkingDirectory("D:\\Documents\\Cours\\Java Workspace\\");
-		ArrayList<File> files = new ArrayList<File>();
+		ArrayList<FileV1> files = new ArrayList<FileV1>();
 		for(int i = 0; i < javaIOFiles.size(); ++i) {
-			files.add(new File(javaIOFiles.get(i)));
+			files.add(new FileV1(javaIOFiles.get(i)));
 		}
 		if(files.size() > 0) {
-			File current = files.get(0);
+			FileV1 current = files.get(0);
 			System.out.println("ClassName : " + current.getName());
 			System.out.println("\nListe des classes internes : ");
 			for(int i = 0; i < current.getInnerClasses().size(); ++i) {
