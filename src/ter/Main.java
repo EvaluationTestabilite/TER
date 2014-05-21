@@ -16,6 +16,55 @@ public class Main {
 	public static void main(String [] args) {
 		//test("D:\\Documents\\Cours\\Java Workspace\\");
 		//tri("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
+		test2("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
+	}
+	
+	public static void test2(String workspace) {
+		ArrayList<java.io.File> javaIOFilesSrc = Utils.readWorkingDirectory(workspace+"\\src\\");
+		ArrayList<java.io.File> javaIOFilesTest = Utils.readWorkingDirectory(workspace+"\\test\\");
+		int taille = javaIOFilesSrc.size() + javaIOFilesTest.size();
+		ArrayList<FileV1> src = new ArrayList<FileV1>();
+		for(int i = 0; i < javaIOFilesSrc.size(); ++i) {
+			System.out.println((i+1)+" / "+taille);
+			src.add(new FileV1(javaIOFilesSrc.get(i)));
+		}
+		ArrayList<FileV1> test = new ArrayList<FileV1>();
+		for(int i = 0; i < javaIOFilesTest.size(); ++i) {
+			System.out.println((i + 1 + src.size())+" / "+taille);
+			test.add(new FileV1(javaIOFilesTest.get(i)));
+		}
+		ArrayList<FileV1> fileWithGettersAndSetters = new ArrayList<FileV1>();
+		ArrayList<FileV1> fileWithReturnMethods = new ArrayList<FileV1>();
+		ArrayList<FileV1> fileWithInnerClasses = new ArrayList<FileV1>();
+		for(int i = 0; i < src.size(); ++i) {
+			if(src.get(i).getGetters().size() + src.get(i).getSetters().size() > 0) {
+				fileWithGettersAndSetters.add(src.get(i));
+			}
+			if(src.get(i).getReturnMethods().size() > 0) {
+				fileWithReturnMethods.add(src.get(i));
+			}
+			if(src.get(i).getInnerClasses().size() > 0) {
+				fileWithInnerClasses.add(src.get(i));
+			}
+		}
+		int compteur = 0;
+		for(int i = 0; i < fileWithGettersAndSetters.size(); ++i) {
+			compteur += fileWithGettersAndSetters.get(i).getGetters().size() + fileWithGettersAndSetters.get(i).getSetters().size();
+		}
+		System.out.println("\n\n\n\nil y a "+fileWithGettersAndSetters.size()+" classes avec des getters et/ou setters.");
+		System.out.println("Au total il y a "+compteur+" getters et/ou setters.\n");
+		compteur = 0;
+		for(int i = 0; i < fileWithReturnMethods.size(); ++i) {
+			compteur += fileWithReturnMethods.get(i).getReturnMethods().size();
+		}
+		System.out.println("il y a "+fileWithReturnMethods.size()+" classes avec des return.");
+		System.out.println("Au total il y a "+compteur+" methodes avec des return.\n");
+		compteur = 0;
+		for(int i = 0; i < fileWithInnerClasses.size(); ++i) {
+			compteur += fileWithInnerClasses.get(i).getInnerClasses().size();
+		}
+		System.out.println("il y a "+fileWithInnerClasses.size()+" classes avec des classes internes.");
+		System.out.println("Au total il y a "+compteur+" classes internes.\n");
 	}
 	
 	/**
