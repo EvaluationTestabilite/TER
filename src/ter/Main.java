@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import files.FileV1;
+import files.FileSrc;
 import utils.Tuple;
 import utils.Utils;
 
@@ -16,26 +16,26 @@ public class Main {
 	public static void main(String [] args) {
 		//test("D:\\Documents\\Cours\\Java Workspace\\");
 		//tri("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
-		test2("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
+		//test2("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
 	}
 	
 	public static void test2(String workspace) {
 		ArrayList<java.io.File> javaIOFilesSrc = Utils.readWorkingDirectory(workspace+"\\src\\");
 		ArrayList<java.io.File> javaIOFilesTest = Utils.readWorkingDirectory(workspace+"\\test\\");
 		int taille = javaIOFilesSrc.size() + javaIOFilesTest.size();
-		ArrayList<FileV1> src = new ArrayList<FileV1>();
+		ArrayList<FileSrc> src = new ArrayList<FileSrc>();
 		for(int i = 0; i < javaIOFilesSrc.size(); ++i) {
 			System.out.println((i+1)+" / "+taille);
-			src.add(new FileV1(javaIOFilesSrc.get(i)));
+			src.add(new FileSrc(javaIOFilesSrc.get(i)));
 		}
-		ArrayList<FileV1> test = new ArrayList<FileV1>();
+		ArrayList<FileSrc> test = new ArrayList<FileSrc>();
 		for(int i = 0; i < javaIOFilesTest.size(); ++i) {
 			System.out.println((i + 1 + src.size())+" / "+taille);
-			test.add(new FileV1(javaIOFilesTest.get(i)));
+			test.add(new FileSrc(javaIOFilesTest.get(i)));
 		}
-		ArrayList<FileV1> fileWithGettersAndSetters = new ArrayList<FileV1>();
-		ArrayList<FileV1> fileWithReturnMethods = new ArrayList<FileV1>();
-		ArrayList<FileV1> fileWithInnerClasses = new ArrayList<FileV1>();
+		ArrayList<FileSrc> fileWithGettersAndSetters = new ArrayList<FileSrc>();
+		ArrayList<FileSrc> fileWithReturnMethods = new ArrayList<FileSrc>();
+		ArrayList<FileSrc> fileWithInnerClasses = new ArrayList<FileSrc>();
 		for(int i = 0; i < src.size(); ++i) {
 			if(src.get(i).getGetters().size() + src.get(i).getSetters().size() > 0) {
 				fileWithGettersAndSetters.add(src.get(i));
@@ -74,16 +74,16 @@ public class Main {
 	 */
 	public static void tri(String workspace) {
 		ArrayList<java.io.File> javaIOFiles = Utils.readWorkingDirectory(workspace);
-		ArrayList<Tuple<FileV1, FileV1>> files = new ArrayList<Tuple<FileV1, FileV1>>();
+		ArrayList<Tuple<FileSrc, FileSrc>> files = new ArrayList<Tuple<FileSrc, FileSrc>>();
 		for(int i = 0; i < javaIOFiles.size(); ++i) {
 			for(int j = 0; j < javaIOFiles.size(); ++j) {
-				if(javaIOFiles.get(j).getName().equalsIgnoreCase("test"+javaIOFiles.get(i).getName()) ||
-						javaIOFiles.get(j).getName().equalsIgnoreCase(javaIOFiles.get(i).getName()+"test")) {
-					files.add(new Tuple<FileV1, FileV1>(new FileV1(javaIOFiles.get(i)), new FileV1(javaIOFiles.get(j))));
+				if(javaIOFiles.get(j).getName().equalsIgnoreCase("test"+javaIOFiles.get(i).getName())/* ||
+						javaIOFiles.get(j).getName().equalsIgnoreCase(
+								javaIOFiles.get(i).getName().substring(0, javaIOFiles.get(i).getName().length()-5)+"test.java")*/) {
+					files.add(new Tuple<FileSrc, FileSrc>(new FileSrc(javaIOFiles.get(i)), new FileSrc(javaIOFiles.get(j))));
 				}
 			}
 		}
-		
 		ArrayList<String> liste = new ArrayList<String>();
 		for(int i = 0; i < files.size(); ++i) {
 			for(int j = 0; j < files.size(); ++j) {
@@ -97,7 +97,7 @@ public class Main {
 				files.remove(i);
 			}
 		}
-		for(int i = 0; i < files.size(); ++i) {System.out.println(i);
+		for(int i = 0; i < files.size(); ++i) {System.out.println(files.get(i).getX().getName()+"          "+files.get(i).getY().getName());
 			java.io.File src = new java.io.File(workspace+"\\src\\"+files.get(i).getX().getName()+".java");
 			java.io.File test = new java.io.File(workspace+"\\test\\"+files.get(i).getY().getName()+".java");
 			try {
@@ -117,12 +117,12 @@ public class Main {
 	 */
 	public static void test(String workspace) {
 		ArrayList<java.io.File> javaIOFiles = Utils.readWorkingDirectory(workspace);
-		ArrayList<FileV1> files = new ArrayList<FileV1>();
+		ArrayList<FileSrc> files = new ArrayList<FileSrc>();
 		for(int i = 0; i < javaIOFiles.size(); ++i) {
-			files.add(new FileV1(javaIOFiles.get(i)));
+			files.add(new FileSrc(javaIOFiles.get(i)));
 		}
 		if(files.size() > 0) {
-			FileV1 current = files.get(0);
+			FileSrc current = files.get(0);
 			System.out.println("ClassName : " + current.getName());
 			System.out.println("\nListe des classes internes : ");
 			for(int i = 0; i < current.getInnerClasses().size(); ++i) {

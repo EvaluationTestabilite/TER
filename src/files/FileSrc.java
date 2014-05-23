@@ -16,27 +16,31 @@ import com.sun.source.tree.VariableTree;
  * @author Rexxar
  *
  */
-public class FileV1 extends AbstractFile {
-	private static final JavaVisitor<Object, FileV1> visitor = new JavaVisitor<Object, FileV1>();
+public class FileSrc extends AbstractFile {
+	private static final JavaVisitor<Object, FileSrc> visitor = new JavaVisitor<Object, FileSrc>();
 
-	private ArrayList<VariableTree> parameters;
+	private ArrayList<VariableTree> attributs;
 	
 	private ArrayList<MethodTree> returnMethods;
+	private ArrayList<MethodTree> methods;
 	private ClassTree mainClass;
 	private ArrayList<ClassTree> innerClasses;
 	private ArrayList<MethodTree> setters;
 	private ArrayList<MethodTree> getters;
+	private ArrayList<MethodTree> constructors;
 	private java.io.File file;
 	
 	/**
 	 * Unique constructeur de cette classe. Permet d'analyser une fichier Java.
 	 * @param file Le fichier Java en question. Si file est null, il ne se passe rien. Si file n'est pas un fichier Java correct, il y aura des erreurs.
 	 */
-	public FileV1(java.io.File file) {
+	public FileSrc(java.io.File file) {
 		if(file != null) {
 			this.file = file;
-			parameters = new ArrayList<VariableTree>();
+			attributs = new ArrayList<VariableTree>();
 			returnMethods = new ArrayList<MethodTree>();
+			methods = new ArrayList<MethodTree>();
+			constructors = new ArrayList<MethodTree>();
 			innerClasses = new ArrayList<ClassTree>();
 			setters = new ArrayList<MethodTree>();
 			getters = new ArrayList<MethodTree>();
@@ -46,6 +50,14 @@ public class FileV1 extends AbstractFile {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public ArrayList<MethodTree> getMethods() {
+		return methods;
+	}
+	
+	public ArrayList<VariableTree> getAttributs() {
+		return attributs;
 	}
 	
 	public java.io.File getFile() {
@@ -74,6 +86,10 @@ public class FileV1 extends AbstractFile {
 	public ArrayList<ClassTree> getInnerClasses() {
 		return innerClasses;
 	}
+	
+	public ArrayList<MethodTree> getConstructors() {
+		return constructors;
+	}
 
 	@Override
 	public void treat(Tree tree) {
@@ -85,14 +101,18 @@ public class FileV1 extends AbstractFile {
 						returnMethods.add(node);
 					}
 				}
-				for(int i = 0; i < parameters.size(); ++i) {
-					if(("set"+parameters.get(i).getName().toString()).compareToIgnoreCase(node.getName().toString()) == 0) {
+				else {
+					constructors.add(node);
+				}
+				for(int i = 0; i < attributs.size(); ++i) {
+					if(("set"+attributs.get(i).getName().toString()).compareToIgnoreCase(node.getName().toString()) == 0) {
 						setters.add(node);
 					}
-					else if(("get"+parameters.get(i).getName().toString()).compareToIgnoreCase(node.getName().toString()) == 0) {
+					else if(("get"+attributs.get(i).getName().toString()).compareToIgnoreCase(node.getName().toString()) == 0) {
 						getters.add(node);
 					}
 				}
+				methods.add(node);
 			}
 			else if(ClassTree.class.isInstance(tree)) {
 				ClassTree node = (ClassTree) tree;
@@ -100,7 +120,7 @@ public class FileV1 extends AbstractFile {
 					mainClass = node;
 					for(int i = 0; i < mainClass.getMembers().size(); ++i) {
 						if(VariableTree.class.isInstance(mainClass.getMembers().get(i))) {
-							parameters.add((VariableTree) mainClass.getMembers().get(i));
+							attributs.add((VariableTree) mainClass.getMembers().get(i));
 						}
 					}
 				}
