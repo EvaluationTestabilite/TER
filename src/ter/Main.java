@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import files.FileSrc;
+import files.FileTest;
 import utils.Tuple;
 import utils.Utils;
 
@@ -17,6 +18,31 @@ public class Main {
 		//test("D:\\Documents\\Cours\\Java Workspace\\");
 		//tri("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
 		//test2("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
+		couplage("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
+	}
+	
+	public static ArrayList<Tuple<FileSrc, FileTest>> couplage(String workspace) {
+		ArrayList<Tuple<FileSrc, FileTest>> result = new ArrayList<Tuple<FileSrc, FileTest>>();
+		ArrayList<java.io.File> javaIOFilesSrc = Utils.readWorkingDirectory(workspace+"\\src\\");
+		ArrayList<java.io.File> javaIOFilesTest = Utils.readWorkingDirectory(workspace+"\\test\\");
+		java.io.File src;
+		java.io.File test;
+		for(int i = 0; i < javaIOFilesSrc.size(); ++i) {
+			src = javaIOFilesSrc.get(i);
+			test = null;
+			for(int j = 0; j < javaIOFilesTest.size(); ++j) {
+				if(javaIOFilesTest.get(j).getName().equalsIgnoreCase("test"+src.getName()) ||
+						javaIOFilesTest.get(j).getName().equalsIgnoreCase(
+								src.getName().substring(0, src.getName().length()-5)+"test.java")) {
+					test = javaIOFilesTest.get(j);
+				}
+			}
+			if(test != null) {
+				result.add(new Tuple<FileSrc, FileTest>(new FileSrc(src), new FileTest(test)));
+			}
+			System.out.println("Couplage et construction des AST : "+(i+1)+" / "+javaIOFilesSrc.size());
+		}
+		return result;
 	}
 	
 	public static void test2(String workspace) {
@@ -77,9 +103,9 @@ public class Main {
 		ArrayList<Tuple<FileSrc, FileSrc>> files = new ArrayList<Tuple<FileSrc, FileSrc>>();
 		for(int i = 0; i < javaIOFiles.size(); ++i) {
 			for(int j = 0; j < javaIOFiles.size(); ++j) {
-				if(javaIOFiles.get(j).getName().equalsIgnoreCase("test"+javaIOFiles.get(i).getName())/* ||
+				if(javaIOFiles.get(j).getName().equalsIgnoreCase("test"+javaIOFiles.get(i).getName()) ||
 						javaIOFiles.get(j).getName().equalsIgnoreCase(
-								javaIOFiles.get(i).getName().substring(0, javaIOFiles.get(i).getName().length()-5)+"test.java")*/) {
+								javaIOFiles.get(i).getName().substring(0, javaIOFiles.get(i).getName().length()-5)+"test.java")) {
 					files.add(new Tuple<FileSrc, FileSrc>(new FileSrc(javaIOFiles.get(i)), new FileSrc(javaIOFiles.get(j))));
 				}
 			}

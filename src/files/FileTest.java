@@ -8,7 +8,6 @@ import parser.JavaVisitor;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 
 /**
  * Premier exemple de classe ayant pour pere AbstractFile.</br>
