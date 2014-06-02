@@ -1,14 +1,19 @@
 package ter;
 
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import com.sun.source.tree.MethodTree;
+
 import files.FileSrc;
 import files.FileTest;
+import utils.AST;
 import utils.Tuple;
 import utils.Utils;
 
@@ -18,9 +23,82 @@ public class Main {
 		//test("D:\\Documents\\Cours\\Java Workspace\\");
 		//tri("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
 		//test2("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
-		couplage("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
+		//couplage("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
+		//test3("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
+		test4("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
+	}
+
+	/**
+	 * Cette methode ecrit un fichier au format exel avec des caracteristique des methodes testes.
+	 * @param workspace Le chemin vers le fichier ou se trouvent les fichiers "src" et "test".
+	 */
+	public static void test4(String workspace) {
+		ArrayList<Tuple<FileSrc, FileTest>> files = couplage(workspace);
+		FileWriter file;
+		BufferedWriter buffW;
+		FileSrc src;
+		FileTest test;
+		ArrayList<MethodTree> testingMeth;
+		try {
+			file = new FileWriter(workspace + "\\data_meth.csv");
+			buffW = new BufferedWriter(file);
+			buffW.write("Classe;Method;Testing_Methods;\n");
+			for(int i = 0; i < files.size(); ++i) {
+				src = files.get(i).getX();
+				test = files.get(i).getY();
+				buffW.write(src.getName() + "\n");
+				for(int j = 0; j < src.getMethods().size(); ++j) {
+					buffW.write(";" + src.getMethods().get(j).getName().toString() + "\n");
+					testingMeth = AST.TestingMethods(src.getMethods().get(j), test.getMethods());
+					for(int k = 0; k < testingMeth.size(); ++k) {
+						buffW.write(";;" + testingMeth.get(k).getName().toString() + "\n");
+					}
+				}
+			}
+		} catch (IOException e) {}
+	}
+
+	/**
+	 * Cette methode ecrit un fichier au format exel avec des caracteristique des classes testes.
+	 * @param workspace Le chemin vers le fichier ou se trouvent les fichiers "src" et "test".
+	 */
+	public static void test3(String workspace) {
+		ArrayList<Tuple<FileSrc, FileTest>> files = couplage(workspace);
+		FileWriter file;
+		BufferedWriter buffW;
+		FileSrc src;
+		FileTest test;
+		int nbStatementSrc;
+		int nbStatementTest;
+		try {
+			file = new FileWriter(workspace + "\\data_class.csv");
+			buffW = new BufferedWriter(file);
+			buffW.write("Nom;;#Attributs;#Constructors;#Getters & Setters;#InnerClasses;#Statement;#ReturnMeth\\#Meth;;#Statement;#Assert\n");
+			for(int i = 0; i < files.size(); ++i) {
+				src = files.get(i).getX();
+				test = files.get(i).getY();
+				nbStatementTest = 0;
+				for(int j = 0; j < test.getMethods().size(); ++j) {
+					nbStatementTest += AST.getStatement(test.getMethods().get(j)).size();
+				}
+				nbStatementSrc = 0;
+				for(int j = 0; j < src.getMethods().size(); ++j) {
+					nbStatementSrc += AST.getStatement(src.getMethods().get(j)).size();
+				}
+				if(nbStatementSrc > 0) {
+					buffW.write(src.getName()+";;"+src.getAttributs().size()+";"+src.getConstructors().size()+";"+(src.getGetters().size()+src.getSetters().size())
+							+";"+src.getInnerClasses().size()+";"+nbStatementSrc+";"+src.getReturnMethods().size()+"\\"+src.getMethods().size()+";;"+nbStatementTest+";"+test.getNbAssert()+"\n");
+				}
+			}
+			buffW.close();
+		} catch (IOException e) {}
 	}
 	
+	/**
+	 * Cette methode tri les fichier source avec leur fichier test associe.
+	 * @param workspace Le chemin vers le fichier ou se trouvent les fichiers "src" et "test".
+	 * @return Une liste de tuples de FileSrc, FileTest.
+	 */
 	public static ArrayList<Tuple<FileSrc, FileTest>> couplage(String workspace) {
 		ArrayList<Tuple<FileSrc, FileTest>> result = new ArrayList<Tuple<FileSrc, FileTest>>();
 		ArrayList<java.io.File> javaIOFilesSrc = Utils.readWorkingDirectory(workspace+"\\src\\");
@@ -45,6 +123,10 @@ public class Main {
 		return result;
 	}
 	
+	/**
+	 * Cette methode affiche quelques caracteristique sur la base de donnee. Elle a juste servie a une courte presentation.
+	 * @param workspace Le chemin vers le fichier ou se trouvent les fichiers "src" et "test".
+	 */
 	public static void test2(String workspace) {
 		ArrayList<java.io.File> javaIOFilesSrc = Utils.readWorkingDirectory(workspace+"\\src\\");
 		ArrayList<java.io.File> javaIOFilesTest = Utils.readWorkingDirectory(workspace+"\\test\\");

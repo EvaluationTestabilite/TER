@@ -60,6 +60,10 @@ public class FileSrc extends AbstractFile {
 		return attributs;
 	}
 	
+	public ClassTree getMainClass() {
+		return mainClass;
+	}
+	
 	public java.io.File getFile() {
 		return file;
 	}

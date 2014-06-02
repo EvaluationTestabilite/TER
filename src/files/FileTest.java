@@ -6,6 +6,7 @@ import parser.JavaParser;
 import parser.JavaVisitor;
 
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
@@ -21,6 +22,7 @@ public class FileTest extends AbstractFile {
 	private ArrayList<MethodTree> methods;
 	private ClassTree mainClass;
 	private java.io.File file;
+	private int nbAssert;
 	
 	/**
 	 * Unique constructeur de cette classe. Permet d'analyser une fichier Java.
@@ -28,6 +30,7 @@ public class FileTest extends AbstractFile {
 	 */
 	public FileTest(java.io.File file) {
 		if(file != null) {
+			nbAssert = 0;
 			this.file = file;
 			methods = new ArrayList<MethodTree>();
 			try {
@@ -36,6 +39,10 @@ public class FileTest extends AbstractFile {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public int getNbAssert() {
+		return nbAssert;
 	}
 	
 	public ArrayList<MethodTree> getMethods() {
@@ -64,6 +71,12 @@ public class FileTest extends AbstractFile {
 				ClassTree node = (ClassTree) tree;
 				if(mainClass == null) {
 					mainClass = node;
+				}
+			}
+			else if(MethodInvocationTree.class.isInstance(tree)) {
+				MethodInvocationTree node = (MethodInvocationTree) tree;
+				if(node.getMethodSelect().toString().contains("assert")) {
+					++nbAssert;
 				}
 			}
 		}
