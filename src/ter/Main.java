@@ -34,24 +34,42 @@ public class Main {
 	 */
 	public static void test4(String workspace) {
 		ArrayList<Tuple<FileSrc, FileTest>> files = couplage(workspace);
+		shaheen.RecupCompl recup = new shaheen.RecupCompl(workspace+"\\bin");
 		FileWriter file;
 		BufferedWriter buffW;
 		FileSrc src;
 		FileTest test;
 		ArrayList<MethodTree> testingMeth;
+		String retour;
+		files.RelativeMeth methTree;
 		try {
 			file = new FileWriter(workspace + "\\data_meth.csv");
 			buffW = new BufferedWriter(file);
-			buffW.write("Classe;Method;Testing_Methods;\n");
+			buffW.write("Classe;Method;Testing_Methods;return;#Statement;#Assert;Complexity\n");
 			for(int i = 0; i < files.size(); ++i) {
 				src = files.get(i).getX();
 				test = files.get(i).getY();
 				buffW.write(src.getName() + "\n");
 				for(int j = 0; j < src.getMethods().size(); ++j) {
-					buffW.write(";" + src.getMethods().get(j).getName().toString() + "\n");
+					if(src.getMethods().get(j).getReturnType() != null && !src.getMethods().get(j).getReturnType().equals("void")) {
+						retour = ";;Vrai;";
+					}
+					else {
+						retour = ";;Faux;";
+					}
+					buffW.write(";" + src.getMethods().get(j).getName().toString() + retour+AST.getStatement(src.getMethods().get(j)).size()+
+							";;"+recup.getComplexityMethode(src.getName(), src.getMethods().get(j).getName().toString())+"\n");
 					testingMeth = AST.TestingMethods(src.getMethods().get(j), test.getMethods());
 					for(int k = 0; k < testingMeth.size(); ++k) {
-						buffW.write(";;" + testingMeth.get(k).getName().toString() + "\n");
+						if(testingMeth.get(k).getReturnType() != null && !testingMeth.get(k).getReturnType().equals("void")) {
+							retour = ";Vrai;";
+						}
+						else {
+							retour = ";Faux;";
+						}
+						methTree = new files.RelativeMeth(testingMeth.get(k));
+						buffW.write(";;" + testingMeth.get(k).getName().toString() + retour+AST.getStatement(testingMeth.get(k)).size()+
+								";"+methTree.getNbAssert()+";"+recup.getComplexityMethode(test.getName(), testingMeth.get(k).getName().toString())+"\n");
 					}
 				}
 			}
@@ -73,7 +91,7 @@ public class Main {
 		try {
 			file = new FileWriter(workspace + "\\data_class.csv");
 			buffW = new BufferedWriter(file);
-			buffW.write("Nom;;#Attributs;#Constructors;#Getters & Setters;#InnerClasses;#Statement;#ReturnMeth\\#Meth;;#Statement;#Assert\n");
+			buffW.write("Nom;;#Attributs;#Constructors;#Getters & Setters;#InnerClasses;#Statement;#ReturnMeth\\#Meth;;#Statement;#Assert;#test\n");
 			for(int i = 0; i < files.size(); ++i) {
 				src = files.get(i).getX();
 				test = files.get(i).getY();
@@ -87,7 +105,8 @@ public class Main {
 				}
 				if(nbStatementSrc > 0) {
 					buffW.write(src.getName()+";;"+src.getAttributs().size()+";"+src.getConstructors().size()+";"+(src.getGetters().size()+src.getSetters().size())
-							+";"+src.getInnerClasses().size()+";"+nbStatementSrc+";"+src.getReturnMethods().size()+"\\"+src.getMethods().size()+";;"+nbStatementTest+";"+test.getNbAssert()+"\n");
+							+";"+src.getInnerClasses().size()+";"+nbStatementSrc+";"+src.getReturnMethods().size()+"\\"+src.getMethods().size()+";;"+nbStatementTest
+							+";"+test.getNbAssert()+";"+test.getMethods().size()+"\n");
 				}
 			}
 			buffW.close();

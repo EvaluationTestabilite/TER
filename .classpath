@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_05"/>
 	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.8.0_05/lib/tools.jar"/>
+	<classpathentry kind="lib" path="D:/Documents/Cours/Java Workspace/MetricsCalculator/bcel-5.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

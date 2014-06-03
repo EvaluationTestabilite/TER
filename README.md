@@ -12,6 +12,8 @@ Pour retirer une JRE :
 Pour ajouter une JRE :
 	TER.CliqueDroit -> Build Path -> Add Libraries -> JRE System Libraries -> choisissez votre jdk
 
-Enfin, pour que le parser de sun soit utilisable, il faut ajouter tools.jar au Build Path :
+Ensuite, pour que le parser de sun soit utilisable, il faut ajouter tools.jar au Build Path :
 	TER.CliqueDroit -> Build Path -> Add External Archives -> tools.jar (Vous le trouverez dans votre jdk\lib)
+	
+Enfin on ajoute bcel-5.2.jar de la meme façon.
 	
