@@ -61,23 +61,31 @@ public class RecupCompl {
 		return complexity;
 	}
 	
-	public int getComplexityMethode(String className, String methodeName) {
+	public int getComplexityMethode(String classeName, String methodeName) {
 		String classe = "";
 		String methode = "";
 		int complexity = -1;
+		int k;
 		
 		classesNames = t.getClassesNames();
 		
 		for(String classname : classesNames)
 		{
 			classe = classname;
+			k = classe.length() - 1;
+			while(k >= 0 && classe.charAt(k) != '.') {
+				k--;
+			}
+			if(k >= 0) {
+				classe = classe.substring(k+1);
+			}
 			
-			if(classe.compareToIgnoreCase(classname)==0){
+			if(classe.equalsIgnoreCase(classeName)){
 				CCs = t.getMethodCCs(classname);
 				for(int i =0; i< CCs.size();i++) {
 					methode = ((Method)CCs.getKey(i)).getName();
 					
-					if(methode.compareToIgnoreCase(methodeName)==0){
+					if(methode.equalsIgnoreCase(methodeName)){
 						complexity = 0;
 						complexity += (Integer)CCs.getValue(i);
 					}
