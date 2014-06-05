@@ -91,10 +91,11 @@ public class Main {
 		FileTest test;
 		int nbStatementSrc;
 		int nbStatementTest;
+		int nbNewInConstructor;
 		try {
 			file = new FileWriter(workspace + "\\data_class.csv");
 			buffW = new BufferedWriter(file);
-			buffW.write("Nom;;#Attributs;#Constructors;#Getters & Setters;#InnerClasses;#Statement;#ReturnMeth;#Meth;;#Statement;#Assert;#test\n");
+			buffW.write("Nom;;#Attributs;#Constructors;#NewInConstructors;#Getters & Setters;#InnerClasses;#Statement;#ReturnMeth;#Meth;;#Statement;#Assert;#test\n");
 			for(int i = 0; i < files.size(); ++i) {
 				src = files.get(i).getX();
 				test = files.get(i).getY();
@@ -106,8 +107,13 @@ public class Main {
 				for(int j = 0; j < src.getMethods().size(); ++j) {
 					nbStatementSrc += AST.getStatement(src.getMethods().get(j)).size();
 				}
+				nbNewInConstructor = 0;
+				for(int j = 0; j < src.getConstructors().size(); ++j) {
+					nbNewInConstructor += new files.NewInConstructor(src.getConstructors().get(j)).getNbNew();
+				}
 				if(nbStatementSrc > 0) {
-					buffW.write(src.getName()+";;"+src.getAttributs().size()+";"+src.getConstructors().size()+";"+(src.getGetters().size()+src.getSetters().size())
+					buffW.write(src.getName()+";;"+src.getAttributs().size()+";"+src.getConstructors().size()
+							+";"+nbNewInConstructor+";"+(src.getGetters().size()+src.getSetters().size())
 							+";"+src.getInnerClasses().size()+";"+nbStatementSrc+";"+src.getReturnMethods().size()+";"+src.getMethods().size()+";;"+nbStatementTest
 							+";"+test.getNbAssert()+";"+test.getMethods().size()+"\n");
 				}
