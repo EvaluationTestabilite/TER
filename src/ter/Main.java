@@ -20,19 +20,17 @@ import utils.Utils;
 public class Main {
 	
 	public static void main(String [] args) {
-		//test("D:\\Documents\\Cours\\Java Workspace\\");
 		//tri("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
-		//test2("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
 		//couplage("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
-		test3("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
-		//test4("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
+		classAnalysis("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
+		//methodAnalysis("D:\\Documents\\Cours\\M1 S2\\TER\\Base de donnees");
 	}
 
 	/**
 	 * Cette methode ecrit un fichier au format exel avec des caracteristique des methodes testes.
 	 * @param workspace Le chemin vers le fichier ou se trouvent les fichiers "src" et "test".
 	 */
-	public static void test4(String workspace) {
+	public static void methodAnalysis(String workspace) {
 		ArrayList<Tuple<AnalysisSrc, AnalysisTest>> files = couplage(workspace);
 		//shaheen.RecupCompl recup = new shaheen.RecupCompl(workspace+"\\bin");
 		/*if(!recup.analyseOK()){
@@ -83,7 +81,7 @@ public class Main {
 	 * Cette methode ecrit un fichier au format exel avec des caracteristique des classes testes.
 	 * @param workspace Le chemin vers le fichier ou se trouvent les fichiers "src" et "test".
 	 */
-	public static void test3(String workspace) {
+	public static void classAnalysis(String workspace) {
 		ArrayList<Tuple<AnalysisSrc, AnalysisTest>> files = couplage(workspace);
 		FileWriter file;
 		BufferedWriter buffW;
@@ -152,58 +150,6 @@ public class Main {
 	}
 	
 	/**
-	 * Cette methode affiche quelques caracteristique sur la base de donnee. Elle a juste servie a une courte presentation.
-	 * @param workspace Le chemin vers le fichier ou se trouvent les fichiers "src" et "test".
-	 */
-	public static void test2(String workspace) {
-		ArrayList<java.io.File> javaIOFilesSrc = Utils.readWorkingDirectory(workspace+"\\src\\");
-		ArrayList<java.io.File> javaIOFilesTest = Utils.readWorkingDirectory(workspace+"\\test\\");
-		int taille = javaIOFilesSrc.size() + javaIOFilesTest.size();
-		ArrayList<AnalysisSrc> src = new ArrayList<AnalysisSrc>();
-		for(int i = 0; i < javaIOFilesSrc.size(); ++i) {
-			System.out.println((i+1)+" / "+taille);
-			src.add(new AnalysisSrc(javaIOFilesSrc.get(i)));
-		}
-		ArrayList<AnalysisSrc> test = new ArrayList<AnalysisSrc>();
-		for(int i = 0; i < javaIOFilesTest.size(); ++i) {
-			System.out.println((i + 1 + src.size())+" / "+taille);
-			test.add(new AnalysisSrc(javaIOFilesTest.get(i)));
-		}
-		ArrayList<AnalysisSrc> fileWithGettersAndSetters = new ArrayList<AnalysisSrc>();
-		ArrayList<AnalysisSrc> fileWithReturnMethods = new ArrayList<AnalysisSrc>();
-		ArrayList<AnalysisSrc> fileWithInnerClasses = new ArrayList<AnalysisSrc>();
-		for(int i = 0; i < src.size(); ++i) {
-			if(src.get(i).getGetters().size() + src.get(i).getSetters().size() > 0) {
-				fileWithGettersAndSetters.add(src.get(i));
-			}
-			if(src.get(i).getReturnMethods().size() > 0) {
-				fileWithReturnMethods.add(src.get(i));
-			}
-			if(src.get(i).getInnerClasses().size() > 0) {
-				fileWithInnerClasses.add(src.get(i));
-			}
-		}
-		int compteur = 0;
-		for(int i = 0; i < fileWithGettersAndSetters.size(); ++i) {
-			compteur += fileWithGettersAndSetters.get(i).getGetters().size() + fileWithGettersAndSetters.get(i).getSetters().size();
-		}
-		System.out.println("\n\n\n\nil y a "+fileWithGettersAndSetters.size()+" classes avec des getters et/ou setters.");
-		System.out.println("Au total il y a "+compteur+" getters et/ou setters.\n");
-		compteur = 0;
-		for(int i = 0; i < fileWithReturnMethods.size(); ++i) {
-			compteur += fileWithReturnMethods.get(i).getReturnMethods().size();
-		}
-		System.out.println("il y a "+fileWithReturnMethods.size()+" classes avec des return.");
-		System.out.println("Au total il y a "+compteur+" methodes avec des return.\n");
-		compteur = 0;
-		for(int i = 0; i < fileWithInnerClasses.size(); ++i) {
-			compteur += fileWithInnerClasses.get(i).getInnerClasses().size();
-		}
-		System.out.println("il y a "+fileWithInnerClasses.size()+" classes avec des classes internes.");
-		System.out.println("Au total il y a "+compteur+" classes internes.\n");
-	}
-	
-	/**
 	 * Cette methode permet de trier tous les .java dans 2 fichiers, les tests dans le fichier tests et les classes correspondantes dans le fichier src.
 	 * Construit egalement l'arbre ast pour chacune d'entre elle afin se savoir si leur syntaxe est correcte.
 	 * @param workspace Le chemin vers le dossier ou se trouve toutes les classes a trier.
@@ -243,37 +189,6 @@ public class Main {
 				copyFile(files.get(i).getY().getFile(), test);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Exemple de programme qui affiche a l'ecran les caractéristiques qui nous interessent.
-	 * @param args Non utilisés.
-	 */
-	public static void test(String workspace) {
-		ArrayList<java.io.File> javaIOFiles = Utils.readWorkingDirectory(workspace);
-		ArrayList<AnalysisSrc> files = new ArrayList<AnalysisSrc>();
-		for(int i = 0; i < javaIOFiles.size(); ++i) {
-			files.add(new AnalysisSrc(javaIOFiles.get(i)));
-		}
-		if(files.size() > 0) {
-			AnalysisSrc current = files.get(0);
-			System.out.println("ClassName : " + current.getName());
-			System.out.println("\nListe des classes internes : ");
-			for(int i = 0; i < current.getInnerClasses().size(); ++i) {
-				System.out.println(current.getInnerClasses().get(i).getSimpleName());
-			}
-			System.out.println("\nListe des methodes avec return : ");
-			for(int i = 0; i < current.getReturnMethods().size(); ++i) {
-				System.out.println(current.getReturnMethods().get(i).getName().toString());
-			}
-			System.out.println("\nListe des getters et setters : ");
-			for(int i = 0; i < current.getGetters().size(); ++i) {
-				System.out.println(current.getGetters().get(i).getName().toString());
-			}
-			for(int i = 0; i < current.getSetters().size(); ++i) {
-				System.out.println(current.getSetters().get(i).getName().toString());
 			}
 		}
 	}
