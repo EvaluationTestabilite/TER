@@ -16,8 +16,8 @@ import com.sun.source.tree.VariableTree;
  * @author Rexxar
  *
  */
-public class FileSrc extends AbstractFile {
-	private static final JavaVisitor<Object, FileSrc> visitor = new JavaVisitor<Object, FileSrc>();
+public class AnalysisSrc extends AbstractAnalysis {
+	private static final JavaVisitor<Object, AnalysisSrc> visitor = new JavaVisitor<Object, AnalysisSrc>();
 
 	private ArrayList<VariableTree> attributs;
 	
@@ -34,7 +34,7 @@ public class FileSrc extends AbstractFile {
 	 * Unique constructeur de cette classe. Permet d'analyser une fichier Java.
 	 * @param file Le fichier Java en question. Si file est null, il ne se passe rien. Si file n'est pas un fichier Java correct, il y aura des erreurs.
 	 */
-	public FileSrc(java.io.File file) {
+	public AnalysisSrc(java.io.File file) {
 		if(file != null) {
 			this.file = file;
 			attributs = new ArrayList<VariableTree>();

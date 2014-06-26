@@ -8,13 +8,18 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
-public class RelativeMeth extends AbstractFile {
-	private static final JavaVisitor<Object, RelativeMeth> visitor = new JavaVisitor<Object, RelativeMeth>();
+/**
+ * Cette analyse prend une methode de l'arbre AST en parametre et permet grace à getCalledMethods de connaitre les methodes appeles par notre parametre.
+ * @author Rexxar
+ *
+ */
+public class AnalysisRelativeMeth extends AbstractAnalysis {
+	private static final JavaVisitor<Object, AnalysisRelativeMeth> visitor = new JavaVisitor<Object, AnalysisRelativeMeth>();
 	
 	private ArrayList<String> calledMethods;
 	private int nbAssert;
 
-	public RelativeMeth(MethodTree tree) {
+	public AnalysisRelativeMeth(MethodTree tree) {
 		calledMethods = new ArrayList<String>();
 		tree.accept(visitor, this);
 	}

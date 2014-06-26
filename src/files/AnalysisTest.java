@@ -16,8 +16,8 @@ import com.sun.source.tree.Tree;
  * @author Rexxar
  *
  */
-public class FileTest extends AbstractFile {
-	private static final JavaVisitor<Object, FileTest> visitor = new JavaVisitor<Object, FileTest>();
+public class AnalysisTest extends AbstractAnalysis {
+	private static final JavaVisitor<Object, AnalysisTest> visitor = new JavaVisitor<Object, AnalysisTest>();
 
 	private ArrayList<MethodTree> methods;
 	private ClassTree mainClass;
@@ -28,7 +28,7 @@ public class FileTest extends AbstractFile {
 	 * Unique constructeur de cette classe. Permet d'analyser une fichier Java.
 	 * @param file Le fichier Java en question. Si file est null, il ne se passe rien. Si file n'est pas un fichier Java correct, il y aura des erreurs.
 	 */
-	public FileTest(java.io.File file) {
+	public AnalysisTest(java.io.File file) {
 		if(file != null) {
 			nbAssert = 0;
 			this.file = file;

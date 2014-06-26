@@ -7,12 +7,12 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
-public class NewInConstructor extends AbstractFile {
-	private static final JavaVisitor<Object, NewInConstructor> visitor = new JavaVisitor<Object, NewInConstructor>();
+public class AnalysisNbConstructor extends AbstractAnalysis {
+	private static final JavaVisitor<Object, AnalysisNbConstructor> visitor = new JavaVisitor<Object, AnalysisNbConstructor>();
 	
 	private int nbNew;
 
-	public NewInConstructor(MethodTree tree) {
+	public AnalysisNbConstructor(MethodTree tree) {
 		tree.accept(visitor, this);
 	}
 	
@@ -23,7 +23,7 @@ public class NewInConstructor extends AbstractFile {
 	@Override
 	public void treat(Tree tree) {
 		if(tree != null) {
-			if(NewArrayTree.class.isInstance(tree) || NewClassTree.class.isInstance(tree)) {
+			if(NewClassTree.class.isInstance(tree)) {
 				++nbNew;
 			}
 		}

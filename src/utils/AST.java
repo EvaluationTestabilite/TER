@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 
-import files.RelativeMeth;
+import files.AnalysisRelativeMeth;
 
 public class AST {
 
@@ -25,7 +25,7 @@ public class AST {
 	 */
 	public static ArrayList<MethodTree> RelatedMethods(MethodTree meth, ArrayList<MethodTree> methods) {
 		ArrayList<MethodTree> result = new ArrayList<MethodTree>();
-		RelativeMeth rm = new RelativeMeth(meth);
+		AnalysisRelativeMeth rm = new AnalysisRelativeMeth(meth);
 		boolean found;
 		int j, k;
 		for(int i = 0; i < methods.size(); ++i) {

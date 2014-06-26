@@ -55,7 +55,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 
-import files.AbstractFile;
+import files.AbstractAnalysis;
 
 /**
  * Cette classe est un visitor qui va parcourir l'ensemble des noeuds d'un ast créé par le parser de sun à partir du noeud où elle est appelé.
@@ -65,7 +65,7 @@ import files.AbstractFile;
  * @param <R> Le type de retour des methodes.
  * @param <D> Le type de parametre des methodes, il doit etendre AbstractFile. A chaque passage dans un noeuds "tree", la methode treat(tree) sera appelee.
  */
-public class JavaVisitor<R, D extends AbstractFile> implements TreeVisitor<R, D> {
+public class JavaVisitor<R, D extends AbstractAnalysis> implements TreeVisitor<R, D> {
 
 	@Override
 	public R visitAnnotatedType(AnnotatedTypeTree arg0, D arg1) {

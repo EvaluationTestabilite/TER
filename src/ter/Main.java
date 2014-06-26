@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 import com.sun.source.tree.MethodTree;
 
-import files.FileSrc;
-import files.FileTest;
+import files.AnalysisSrc;
+import files.AnalysisTest;
 import utils.AST;
 import utils.Tuple;
 import utils.Utils;
@@ -33,18 +33,18 @@ public class Main {
 	 * @param workspace Le chemin vers le fichier ou se trouvent les fichiers "src" et "test".
 	 */
 	public static void test4(String workspace) {
-		ArrayList<Tuple<FileSrc, FileTest>> files = couplage(workspace);
+		ArrayList<Tuple<AnalysisSrc, AnalysisTest>> files = couplage(workspace);
 		//shaheen.RecupCompl recup = new shaheen.RecupCompl(workspace+"\\bin");
 		/*if(!recup.analyseOK()){
 			System.out.println("PAS BON!!!!");
 		}*/
 		FileWriter file;
 		BufferedWriter buffW;
-		FileSrc src;
-		FileTest test;
+		AnalysisSrc src;
+		AnalysisTest test;
 		ArrayList<MethodTree> testingMeth;
 		String retour;
-		files.RelativeMeth methTree;
+		files.AnalysisRelativeMeth methTree;
 		try {
 			file = new FileWriter(workspace + "\\data_meth.csv");
 			buffW = new BufferedWriter(file);
@@ -70,7 +70,7 @@ public class Main {
 						else {
 							retour = ";Vrai;";
 						}
-						methTree = new files.RelativeMeth(testingMeth.get(k));
+						methTree = new files.AnalysisRelativeMeth(testingMeth.get(k));
 						buffW.write(";;" + testingMeth.get(k).getName().toString() + retour+AST.getStatement(testingMeth.get(k)).size()+
 								";"+methTree.getNbAssert()+";"/*+recup.getComplexityMethode(test.getName(), testingMeth.get(k).getName().toString())*/+"\n");
 					}
@@ -84,18 +84,18 @@ public class Main {
 	 * @param workspace Le chemin vers le fichier ou se trouvent les fichiers "src" et "test".
 	 */
 	public static void test3(String workspace) {
-		ArrayList<Tuple<FileSrc, FileTest>> files = couplage(workspace);
+		ArrayList<Tuple<AnalysisSrc, AnalysisTest>> files = couplage(workspace);
 		FileWriter file;
 		BufferedWriter buffW;
-		FileSrc src;
-		FileTest test;
+		AnalysisSrc src;
+		AnalysisTest test;
 		int nbStatementSrc;
 		int nbStatementTest;
 		int nbNewInConstructor;
 		try {
 			file = new FileWriter(workspace + "\\data_class.csv");
 			buffW = new BufferedWriter(file);
-			buffW.write("Nom;;#Attributs;#Constructors;#NewInConstructors;#Getters & Setters;#InnerClasses;#Statement;#ReturnMeth;#Meth;;#Statement;#Assert;#test\n");
+			buffW.write("Nom;;#Attributs;#Constructors;#NewInConstructors;#Getters;#Setters;#InnerClasses;#Statement;#ReturnMeth;#Meth;;#Statement;#Assert;#test\n");
 			for(int i = 0; i < files.size(); ++i) {
 				src = files.get(i).getX();
 				test = files.get(i).getY();
@@ -109,11 +109,11 @@ public class Main {
 				}
 				nbNewInConstructor = 0;
 				for(int j = 0; j < src.getConstructors().size(); ++j) {
-					nbNewInConstructor += new files.NewInConstructor(src.getConstructors().get(j)).getNbNew();
+					nbNewInConstructor += new files.AnalysisNbConstructor(src.getConstructors().get(j)).getNbNew();
 				}
 				if(nbStatementSrc > 0) {
 					buffW.write(src.getName()+";;"+src.getAttributs().size()+";"+src.getConstructors().size()
-							+";"+nbNewInConstructor+";"+(src.getGetters().size()+src.getSetters().size())
+							+";"+nbNewInConstructor+";"+src.getGetters().size()+";"+src.getSetters().size()
 							+";"+src.getInnerClasses().size()+";"+nbStatementSrc+";"+src.getReturnMethods().size()+";"+src.getMethods().size()+";;"+nbStatementTest
 							+";"+test.getNbAssert()+";"+test.getMethods().size()+"\n");
 				}
@@ -127,8 +127,8 @@ public class Main {
 	 * @param workspace Le chemin vers le fichier ou se trouvent les fichiers "src" et "test".
 	 * @return Une liste de tuples de FileSrc, FileTest.
 	 */
-	public static ArrayList<Tuple<FileSrc, FileTest>> couplage(String workspace) {
-		ArrayList<Tuple<FileSrc, FileTest>> result = new ArrayList<Tuple<FileSrc, FileTest>>();
+	public static ArrayList<Tuple<AnalysisSrc, AnalysisTest>> couplage(String workspace) {
+		ArrayList<Tuple<AnalysisSrc, AnalysisTest>> result = new ArrayList<Tuple<AnalysisSrc, AnalysisTest>>();
 		ArrayList<java.io.File> javaIOFilesSrc = Utils.readWorkingDirectory(workspace+"\\src\\");
 		ArrayList<java.io.File> javaIOFilesTest = Utils.readWorkingDirectory(workspace+"\\test\\");
 		java.io.File src;
@@ -144,7 +144,7 @@ public class Main {
 				}
 			}
 			if(test != null) {
-				result.add(new Tuple<FileSrc, FileTest>(new FileSrc(src), new FileTest(test)));
+				result.add(new Tuple<AnalysisSrc, AnalysisTest>(new AnalysisSrc(src), new AnalysisTest(test)));
 			}
 			System.out.println("Couplage et construction des AST : "+(i+1)+" / "+javaIOFilesSrc.size());
 		}
@@ -159,19 +159,19 @@ public class Main {
 		ArrayList<java.io.File> javaIOFilesSrc = Utils.readWorkingDirectory(workspace+"\\src\\");
 		ArrayList<java.io.File> javaIOFilesTest = Utils.readWorkingDirectory(workspace+"\\test\\");
 		int taille = javaIOFilesSrc.size() + javaIOFilesTest.size();
-		ArrayList<FileSrc> src = new ArrayList<FileSrc>();
+		ArrayList<AnalysisSrc> src = new ArrayList<AnalysisSrc>();
 		for(int i = 0; i < javaIOFilesSrc.size(); ++i) {
 			System.out.println((i+1)+" / "+taille);
-			src.add(new FileSrc(javaIOFilesSrc.get(i)));
+			src.add(new AnalysisSrc(javaIOFilesSrc.get(i)));
 		}
-		ArrayList<FileSrc> test = new ArrayList<FileSrc>();
+		ArrayList<AnalysisSrc> test = new ArrayList<AnalysisSrc>();
 		for(int i = 0; i < javaIOFilesTest.size(); ++i) {
 			System.out.println((i + 1 + src.size())+" / "+taille);
-			test.add(new FileSrc(javaIOFilesTest.get(i)));
+			test.add(new AnalysisSrc(javaIOFilesTest.get(i)));
 		}
-		ArrayList<FileSrc> fileWithGettersAndSetters = new ArrayList<FileSrc>();
-		ArrayList<FileSrc> fileWithReturnMethods = new ArrayList<FileSrc>();
-		ArrayList<FileSrc> fileWithInnerClasses = new ArrayList<FileSrc>();
+		ArrayList<AnalysisSrc> fileWithGettersAndSetters = new ArrayList<AnalysisSrc>();
+		ArrayList<AnalysisSrc> fileWithReturnMethods = new ArrayList<AnalysisSrc>();
+		ArrayList<AnalysisSrc> fileWithInnerClasses = new ArrayList<AnalysisSrc>();
 		for(int i = 0; i < src.size(); ++i) {
 			if(src.get(i).getGetters().size() + src.get(i).getSetters().size() > 0) {
 				fileWithGettersAndSetters.add(src.get(i));
@@ -210,13 +210,13 @@ public class Main {
 	 */
 	public static void tri(String workspace) {
 		ArrayList<java.io.File> javaIOFiles = Utils.readWorkingDirectory(workspace);
-		ArrayList<Tuple<FileSrc, FileSrc>> files = new ArrayList<Tuple<FileSrc, FileSrc>>();
+		ArrayList<Tuple<AnalysisSrc, AnalysisSrc>> files = new ArrayList<Tuple<AnalysisSrc, AnalysisSrc>>();
 		for(int i = 0; i < javaIOFiles.size(); ++i) {
 			for(int j = 0; j < javaIOFiles.size(); ++j) {
 				if(javaIOFiles.get(j).getName().equalsIgnoreCase("test"+javaIOFiles.get(i).getName()) ||
 						javaIOFiles.get(j).getName().equalsIgnoreCase(
 								javaIOFiles.get(i).getName().substring(0, javaIOFiles.get(i).getName().length()-5)+"test.java")) {
-					files.add(new Tuple<FileSrc, FileSrc>(new FileSrc(javaIOFiles.get(i)), new FileSrc(javaIOFiles.get(j))));
+					files.add(new Tuple<AnalysisSrc, AnalysisSrc>(new AnalysisSrc(javaIOFiles.get(i)), new AnalysisSrc(javaIOFiles.get(j))));
 				}
 			}
 		}
@@ -253,12 +253,12 @@ public class Main {
 	 */
 	public static void test(String workspace) {
 		ArrayList<java.io.File> javaIOFiles = Utils.readWorkingDirectory(workspace);
-		ArrayList<FileSrc> files = new ArrayList<FileSrc>();
+		ArrayList<AnalysisSrc> files = new ArrayList<AnalysisSrc>();
 		for(int i = 0; i < javaIOFiles.size(); ++i) {
-			files.add(new FileSrc(javaIOFiles.get(i)));
+			files.add(new AnalysisSrc(javaIOFiles.get(i)));
 		}
 		if(files.size() > 0) {
-			FileSrc current = files.get(0);
+			AnalysisSrc current = files.get(0);
 			System.out.println("ClassName : " + current.getName());
 			System.out.println("\nListe des classes internes : ");
 			for(int i = 0; i < current.getInnerClasses().size(); ++i) {
