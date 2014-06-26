@@ -9,10 +9,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import Analysis.AnalysisSrc;
+import Analysis.AnalysisTest;
+
 import com.sun.source.tree.MethodTree;
 
-import files.AnalysisSrc;
-import files.AnalysisTest;
 import utils.AST;
 import utils.Tuple;
 import utils.Utils;
@@ -42,7 +43,7 @@ public class Main {
 		AnalysisTest test;
 		ArrayList<MethodTree> testingMeth;
 		String retour;
-		files.AnalysisRelativeMeth methTree;
+		Analysis.AnalysisRelativeMeth methTree;
 		try {
 			file = new FileWriter(workspace + "\\data_meth.csv");
 			buffW = new BufferedWriter(file);
@@ -68,7 +69,7 @@ public class Main {
 						else {
 							retour = ";Vrai;";
 						}
-						methTree = new files.AnalysisRelativeMeth(testingMeth.get(k));
+						methTree = new Analysis.AnalysisRelativeMeth(testingMeth.get(k));
 						buffW.write(";;" + testingMeth.get(k).getName().toString() + retour+AST.getStatement(testingMeth.get(k)).size()+
 								";"+methTree.getNbAssert()+";"/*+recup.getComplexityMethode(test.getName(), testingMeth.get(k).getName().toString())*/+"\n");
 					}
@@ -107,7 +108,7 @@ public class Main {
 				}
 				nbNewInConstructor = 0;
 				for(int j = 0; j < src.getConstructors().size(); ++j) {
-					nbNewInConstructor += new files.AnalysisNbConstructor(src.getConstructors().get(j)).getNbNew();
+					nbNewInConstructor += new Analysis.AnalysisNbConstructor(src.getConstructors().get(j)).getNbNew();
 				}
 				if(nbStatementSrc > 0) {
 					buffW.write(src.getName()+";;"+src.getAttributs().size()+";"+src.getConstructors().size()

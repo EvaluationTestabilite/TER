@@ -1,4 +1,4 @@
-package files;
+package Analysis;
 
 import parser.JavaVisitor;
 

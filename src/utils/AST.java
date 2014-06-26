@@ -2,10 +2,10 @@ package utils;
 
 import java.util.ArrayList;
 
+import Analysis.AnalysisRelativeMeth;
+
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
-
-import files.AnalysisRelativeMeth;
 
 public class AST {
 
